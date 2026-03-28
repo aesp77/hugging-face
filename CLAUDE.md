@@ -237,33 +237,37 @@ hugging-face-learning/
 ├── src/
 │   └── hf_volsurf/
 │       ├── __init__.py
-│       ├── data/               # Data loading, synthetic generation
+│       ├── data/               # Data loading, HF Dataset wrappers
 │       │   ├── __init__.py
-│       │   ├── synthetic.py    # BS-based surface generation
-│       │   └── loaders.py      # HF Datasets integration
+│       │   ├── loaders.py      # VolSurfaceDataLoader (SQLite → grids)
+│       │   └── hf_dataset.py   # HF Datasets integration
 │       ├── models/             # ML model definitions
 │       │   ├── __init__.py
-│       │   ├── finbert.py      # FinBERT sentiment pipeline
+│       │   ├── finbert.py      # FinBERT sentiment pipeline (frozen)
 │       │   ├── transformer.py  # Time-series Transformer for vol
 │       │   └── diffusion.py    # DDPM for generative surfaces
-│       ├── training/           # Training loops, Trainer configs
-│       │   ├── __init__.py
-│       │   └── trainer.py
 │       ├── evaluation/         # Metrics, no-arb checks
 │       │   ├── __init__.py
-│       │   └── metrics.py
+│       │   └── metrics.py      # RMSE, MAE, arb violation rate
 │       └── utils/
 │           ├── __init__.py
-│           └── vol_math.py     # BS formula, moneyness, greeks
+│           └── vol_math.py     # BS formula, tenor conversion, arb checks
+├── streamlit_app/              # Dashboard (NOT inside src/)
+│   ├── app.py                  # Main entry point
+│   ├── utils/
+│   │   └── config.py           # Shared paths
+│   └── pages/
+│       ├── 1_Surface_Explorer.py
+│       ├── 2_DDPM_Generator.py
+│       ├── 3_FinBERT_Sentiment.py
+│       └── 4_Data_Summary.py
 ├── notebooks/
 │   ├── 01_hf_ecosystem_tour.ipynb
-│   ├── 02_synthetic_vol_surface.ipynb
+│   ├── 02_real_vol_surface_eda.ipynb
 │   ├── 03_finbert_sentiment.ipynb
 │   ├── 04_transformer_vol.ipynb
 │   ├── 05_diffusion_vol.ipynb
 │   └── 06_gradio_demo.ipynb
-├── app/
-│   └── app.py                  # Gradio demo app
 ├── tests/
 │   ├── unit/
 │   ├── integration/
@@ -276,8 +280,9 @@ hugging-face-learning/
 ## Current State
 
 - **Branch:** main
-- **Status:** Project initialized — scaffold + README + CLAUDE.md created
-- **Next step:** User to choose which module to build first
+- **Repo:** https://github.com/aesp77/hugging-face
+- **Status:** Phase 3 complete — notebooks done, modules extracted, Streamlit app running
+- **Next step:** Improve Transformer (predict changes), conditional DDPM, HF Spaces deployment
 
 ## Do NOT
 
