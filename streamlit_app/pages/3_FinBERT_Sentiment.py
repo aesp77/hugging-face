@@ -18,7 +18,30 @@ from utils.config import DB_PATH
 
 st.set_page_config(page_title="FinBERT Sentiment", layout="wide")
 st.title("FinBERT Sentiment & Volatility")
-st.markdown("Score financial headlines with FinBERT and see the relationship with implied volatility.")
+
+with st.expander("What is this page?", expanded=False):
+    st.markdown("""
+**Purpose:** Score financial headlines with **FinBERT** (a BERT model fine-tuned on financial text)
+and explore the relationship between news sentiment and implied volatility movements.
+
+**Why FinBERT, not generic sentiment?** General-purpose sentiment models miss financial nuance.
+FinBERT was trained on analyst reports, earnings calls, and financial news, so it understands that
+"rate hike" is factual/neutral (not negative) while "bank collapse" is strongly negative.
+
+**What we found (NB 03):**
+- **Correlation r = -0.575** between net sentiment and same-day ATM vol change
+- Negative sentiment headlines (SVB collapse: -0.93, carry unwind: -0.92) align with vol spikes
+- Positive sentiment (vaccine news: +0.87, Nvidia: +0.91) aligns with vol compression
+- Fed rate actions classified as positive/neutral — a domain-specific nuance
+
+**How to use this page:**
+- **Single headline:** Type any financial headline and see the positive/negative/neutral breakdown
+- **Batch analysis:** Score 8 sample headlines covering COVID, SVB, rate hikes, AI rally
+- **ATM vol chart:** Reference chart showing the full 2010-2026 ATM 1m vol time series
+
+**HF library:** `transformers.pipeline("sentiment-analysis", model="ProsusAI/finbert")`
+""")
+
 
 
 @st.cache_resource

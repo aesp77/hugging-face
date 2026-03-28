@@ -17,7 +17,27 @@ from utils.config import DB_PATH
 
 st.set_page_config(page_title="Surface Explorer", layout="wide")
 st.title("Surface Explorer")
-st.markdown("Browse real SPX implied volatility surfaces (2010-2026).")
+
+with st.expander("What is this page?", expanded=False):
+    st.markdown("""
+**Purpose:** Browse 16 years of real SPX implied volatility surfaces interactively.
+
+**Why it matters:** An implied volatility surface maps how the market prices risk across
+different strikes (moneyness) and maturities (tenor). The shape encodes expectations about
+future returns — skew reflects crash risk, term structure reflects vol regime expectations.
+
+**What to look for:**
+- **Skew** (left side higher than right): equity markets always price downside protection
+  more than upside. The steeper the skew, the more the market fears a crash.
+- **Term structure**: during crises, short-term vol spikes above long-term (inversion).
+  In calm markets, long-term vol is typically higher (contango).
+- **Level**: ATM 1m IV ranges from 8.8% (calm) to 77.5% (COVID crash peak).
+
+**Quick picks** let you jump to key market events to see how the surface responded.
+
+**Data source:** Marquee (Goldman Sachs), copied from the `rl_hedging_comparison` project.
+4,134 complete daily surfaces, each with 104 grid points (8 tenors x 13 strikes).
+""")
 
 
 @st.cache_resource

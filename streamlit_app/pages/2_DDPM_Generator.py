@@ -19,7 +19,34 @@ from utils.config import DB_PATH, OUTPUT_DIR
 
 st.set_page_config(page_title="DDPM Generator", layout="wide")
 st.title("DDPM Generative Vol Surfaces")
-st.markdown("Generate new implied volatility surfaces from random noise using a trained DDPM.")
+
+with st.expander("What is this page?", expanded=False):
+    st.markdown("""
+**Purpose:** Generate new, realistic implied volatility surfaces from pure random noise
+using a trained **Denoising Diffusion Probabilistic Model** (DDPM) from the HF `diffusers` library.
+
+**How it works:** The DDPM starts from Gaussian noise and iteratively denoises it over 1,000
+steps into a coherent vol surface. The UNet2D model (651K parameters) was trained on 3,113
+daily SPX surfaces (2010-2021) to learn what a "valid" surface looks like.
+
+**Why it matters:** This is the standout result of the project. The model learns the
+statistical structure of vol surfaces — including **no-arbitrage constraints** — purely from
+data, with no explicit supervision:
+
+| Constraint | Generated | Real data |
+|-----------|-----------|-----------|
+| Calendar arb free | ~80% | 78% |
+| Butterfly arb free | 100% | 100% |
+| Mean IV difference | 0.2% | — |
+
+**Applications:**
+- **Data augmentation** — generate additional surfaces for training other models
+- **Scenario generation** — sample "what-if" surfaces for risk management
+- **Stress testing** — generate extreme but plausible surfaces
+
+**HF library:** `diffusers.UNet2DModel` + `diffusers.DDPMScheduler`
+""")
+
 
 
 @st.cache_resource

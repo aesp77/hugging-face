@@ -20,6 +20,32 @@ from utils.config import DB_PATH, OUTPUT_DIR
 st.set_page_config(page_title="Data Summary", layout="wide")
 st.title("Data Summary")
 
+with st.expander("What is this page?", expanded=False):
+    st.markdown("""
+**Purpose:** Overview of the database powering this app — row counts, date coverage,
+train/val/test split, and no-arbitrage compliance of the real market data.
+
+**Data origin:** All data was copied from the `rl_hedging_comparison` project's SQLite database
+(58 MB), which in turn was sourced from:
+- **Marquee (Goldman Sachs)** — vol surfaces (429k grid points, 2010-2026)
+- **PSC / FirstRate** — SPX spot prices (4k daily, 2010-2026)
+- **Bloomberg** — OIS rates and dividend yields
+
+**Train / Val / Test split:** Chronological (no shuffling) to prevent look-ahead bias:
+- **Train** (2010-2021): 3,113 surfaces — model training
+- **Val** (2022-2023): 512 surfaces — hyperparameter tuning, early stopping
+- **Test** (2024-2026): 509 surfaces — final evaluation, never seen during training
+
+**No-arbitrage compliance:** Real Marquee surfaces are interpolated, not arbitrage-free
+by construction. About 17% violate calendar-spread constraints (total variance not
+monotonically increasing in maturity). Butterfly constraints (strike convexity) are
+always satisfied. These rates set the benchmark for the DDPM generative model.
+
+**Grid definition:** Each surface has 8 tenors (1m to 2y) x 13 strikes (70% to 130%
+moneyness) = 104 implied volatility values per trading day.
+""")
+
+
 
 @st.cache_resource
 def load_summary():
